@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Germs AR</title>
+        <!-- Integrate A-frame XR -->
+        <script src="vendor/aframe-master.js"></script>
+        <script src='vendor/three.xr.js'></script>
+        <script src='dist/aframe-xr.js'></script>
+        <!-- Custom Components -->
+        <script src="components/random-color.js"></script>
+        <script src="components/random-movement.js"></script>
+        <script src="components/random-rotation.js"></script>
+        <script src="components/hit-test.js">
+
+        </script>
+    </head>
+
+    <body style="margin: 0px; overflow: hidden;">
+        <!-- this is running on a-frame xr, so no need to initialize AR or camera
+        Demo component included here-->
+        <a-scene hit-test>
+            <!-- Load in OBJ assets -->
+            <a-assets>
+                <!-- Sars -->
+                <a-asset-item id="sars-obj" src="models/sars_virus.obj"></a-asset-item>
+                <a-asset-item id="sars-mtl" src="models/sars_virus.mtl"></a-asset-item>
+                <!-- bacillus -->
+                <a-asset-item id="bacillus-obj" src="models/bacillus.obj"></a-asset-item>
+                <!-- erythrocyte -->
+                <a-asset-item id="erythrocyte-obj" src="models/erythrocyte.obj"></a-asset-item>
+                <a-asset-item id="erythrocyte-mtl" src="models/erythrocyte.mtl"></a-asset-item>
+            </a-assets>
+            <!-- everything else with js -->
+        </a-scene>
+
+        <script type="text/javascript">
+            /*
+                3 different OBJ files Loaded into the sketch here.
+                Size calibration is pretty good
+                Load time is really slow - must be large OBJ files. Running decently well on my computer, if a bit laggy.
+                I think that the assets are too large - both because I'm having to scale them and also because of the load time.
+            */
+            let scene = document.querySelector('a-scene');
+
+            // let reticle = createReticle();
+
+            /*
+            Ok demo of Hit test. Lets see if I can get this working first
+            */
+
+
+            let sarsArray = [];
+            let bacillusArray = [];
+            let erythrocyteArray = [];
+            let maxGerms = 10;
+
+            function createGermsArray() {
+                for (let i = 0; i < maxGerms; i++) {
+                    sarsArray[i] = createSars(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0);
+                    bacillusArray[i] = createBacillus(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0.5);
+                    erythrocyteArray[i] = createErythrocyte(i * 0.2 - maxGerms/2 * 0.2, 0.5, -0.5);
+
+                    // Just see if I can get everything random walking
+                    sarsArray[i].setAttribute("random-movement", "");
+                    bacillusArray[i].setAttribute("random-movement", "");
+                    erythrocyteArray[i].setAttribute("random-movement", "");
+                    // Random spinning?
+                    sarsArray[i].setAttribute("random-rotation", "");
+                    bacillusArray[i].setAttribute("random-rotation", "");
+                    erythrocyteArray[i].setAttribute("random-rotation", "");
+                }
+            }
+
+            function createSars(x, y, z, appendTo = scene) {
+                let sars = document.createElement("a-entity");
+                // sars.setAttribute("obj-model", "obj", "#sars-obj" , "mtl", "#sars-mtl");
+                sars.setAttribute("obj-model", "obj", "#sars-obj");
+                sars.setAttribute("random-color", '');
+                sars.setAttribute("class", "sars bacteria");
+                sars.setAttribute("position", `${x} ${y} ${z}`);
+                sars.setAttribute("scale", ".001 .001 .001");
+
+                appendTo.appendChild(sars);
+                return sars;
+            }
+
+            function createReticle(appendTo = scene) {
+                let reticle = document.createElement('a-entity');
+                reticle.setAttribute("reticle", "");
+                reticle.setAttribute("geometry", "primitive", "ring", "radiusInner", "0.04", "radiusOuter", "0.05");
+                reticle.setAttribute("material", "color", "green");
+
+                appendTo.appendChild(reticle);
+                return reticle;
+            }
+
+            function createBacillus(x, y, z, appendTo = scene) {
+                let bacillus = document.createElement("a-entity");
+                bacillus.setAttribute("obj-model", "obj", "#bacillus-obj");
+                bacillus.setAttribute("random-color", '');
+                bacillus.setAttribute("class", "bacillus bacteria");
+                bacillus.setAttribute("position", `${x} ${y} ${z}`);
+                bacillus.setAttribute("scale", ".0002 .0002 .0002");
+
+                appendTo.appendChild(bacillus);
+                return bacillus;
+            }
+
+            function createErythrocyte(x, y, z, appendTo = scene) {
+                let erythrocyte = document.createElement("a-entity");
+                erythrocyte.setAttribute("obj-model", "obj", "#erythrocyte-obj");
+                erythrocyte.setAttribute("material", "color", "red");
+                erythrocyte.setAttribute("class", "erythrocyte bacteria");
+                erythrocyte.setAttribute("position", `${x} ${y} ${z}`);
+                erythrocyte.setAttribute("scale", ".005 .005 .005");
+
+                appendTo.appendChild(erythrocyte);
+                return erythrocyte;
+            }
+
+            // I have something for this already
+            // var scene = AFRAME.scenes[0];
+
+            var newObject = function(data) {
+              var entity = data.detail;
+
+              entity.setAttribute('geometry', {
+                primitive: 'box',
+                width: 0.1,
+                height: 0.1,
+                depth: 0.1
+              });
+
+              entity.setAttribute('material', {
+                shader: 'standard',
+                transparent: true,
+                opacity: 0.45,
+                fog: false,
+                color: '#ffcc00'
+              });
+
+              scene.appendChild(entity);
+            }
+
+            var newBacteria = function(data) {
+                let entity = data.detail;
+
+                entity.setAttribute("obj-model", "obj", "#bacillus-obj");
+                entity.setAttribute("random-color", '');
+                entity.setAttribute("class", "bacillus bacteria");
+                // entity.setAttribute("position", `${x} ${y} ${z}`);
+                entity.setAttribute("scale", ".0002 .0002 .0002");
+
+                scene.appendChild(entity);
+            }
+
+            // scene.addEventListener('newAnchoredEntity', newObject);
+            scene.addEventListener('newAnchoredEntity', newBacteria);
+        </script>
+
+    </body>
+</html>
