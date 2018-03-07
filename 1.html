@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Germs AR</title>
+        <!-- Include A-frame -->
+        <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+        <!-- Include ar.js for a-frame (this one updated for iOS 11.2)-->
+        <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/build/aframe-ar.js"> </script>
+    </head>
+
+    <body style="margin: 0px; overflow: hidden;">
+        <!-- initialize ar.js in scene-->
+        <a-scene embedded arjs>
+            <a-box position="4 1 1" material="color:red;"></a-box>
+            <!-- define camera that moves according to marker position -->
+            <a-marker-camera preset="hiro">
+                <a-entity geometry="primitive: plane; width; 1;" material="color:blue;"></a-entity>
+            </a-marker-camera>
+        </a-scene>
+    </body>
+</html>

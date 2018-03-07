@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Germs AR</title>
+        <!-- Include A-frame -->
+        <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+        <!-- Include ar.js for a-frame (this one updated for iOS 11.2)-->
+        <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/build/aframe-ar.js"> </script>
+
+        <!-- Custom Components -->
+        <script src="components/random-color.js"></script>
+    </head>
+
+    <body style="margin: 0px; overflow: hidden;">
+        <!-- initialize ar.js in scene-->
+        <a-scene embedded arjs>
+
+            <a-assets>
+                <a-asset-item id="sars-obj" src="models/sars_virus.obj"></a-asset-item>
+                <a-asset-item id="sars-mtl" src="models/sars_virus.mtl"></a-asset-item>
+
+                <a-asset-item id="bacillus-obj" src="models/bacillus.obj"></a-asset-item>
+
+                <a-asset-item id="erythrocyte-obj" src="models/erythrocyte.obj"></a-asset-item>
+                <a-asset-item id="erythrocyte-mtl" src="models/erythrocyte.mtl"></a-asset-item>
+
+            </a-assets>
+
+            <!-- define camera that moves according to marker position -->
+            <a-marker-camera preset="hiro"></a-marker-camera>
+        </a-scene>
+
+        <script type="text/javascript">
+            /*
+                3 different OBJ files Loaded into the sketch here.
+                Size calibration is pretty good
+                Load time is really slow - must be large OBJ files. Running decently well on my computer, if a bit laggy. I think that the assets are too large - both because I'm having to scale them and also because of the load time.
+
+                Including components in this version.
+            */
+            let scene = document.querySelector('a-scene');
+
+            let sarsArray = [];
+            let bacillusArray = [];
+            let erythrocyteArray = [];
+
+            for (let i = 0; i < 10; i++) {
+                sarsArray[i] = createSars(i * 0.2, 0.5, 0);
+                bacillusArray[i] = createBacillus(i * 0.2, 0.5, 0.5);
+                erythrocyteArray[i] = createErythrocyte(i * 0.2, 0.5, -0.5);
+            }
+
+            function createSars(x, y, z, appendTo = scene) {
+                let sars = document.createElement("a-entity");
+                // sars.setAttribute("obj-model", "obj", "#sars-obj" , "mtl", "#sars-mtl");
+                sars.setAttribute("obj-model", "obj", "#sars-obj");
+                // sars.setAttribute("material", "color", "blue");
+                sars.setAttribute("random-color", '');
+                sars.setAttribute("class", "sars bacteria");
+                sars.setAttribute("position", `${x} ${y} ${z}`);
+                sars.setAttribute("scale", ".001 .001 .001");
+
+                appendTo.appendChild(sars);
+                return sars;
+            }
+
+            function createBacillus(x, y, z, appendTo = scene) {
+                let bacillus = document.createElement("a-entity");
+                bacillus.setAttribute("obj-model", "obj", "#bacillus-obj");
+                // bacillus.setAttribute("material", "color", "green");
+                bacillus.setAttribute("random-color", '');
+                bacillus.setAttribute("class", "bacillus bacteria");
+                bacillus.setAttribute("position", `${x} ${y} ${z}`);
+                bacillus.setAttribute("scale", ".0002 .0002 .0002");
+
+                appendTo.appendChild(bacillus);
+                return bacillus;
+            }
+
+            function createErythrocyte(x, y, z, appendTo = scene) {
+                let erythrocyte = document.createElement("a-entity");
+                erythrocyte.setAttribute("obj-model", "obj", "#erythrocyte-obj");
+                erythrocyte.setAttribute("material", "color", "red");
+                erythrocyte.setAttribute("class", "erythrocyte bacteria");
+                erythrocyte.setAttribute("position", `${x} ${y} ${z}`);
+                erythrocyte.setAttribute("scale", ".005 .005 .005");
+
+                appendTo.appendChild(erythrocyte);
+                return erythrocyte;
+            }
+
+        </script>
+
+    </body>
+</html>
