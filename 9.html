@@ -11,25 +11,27 @@
         <script src="components/random-color.js"></script>
         <script src="components/random-movement.js"></script>
         <script src="components/random-rotation.js"></script>
+        <script src="components/hit-test.js">
+
+        </script>
     </head>
 
     <body style="margin: 0px; overflow: hidden;">
-        <!-- initialize ar.js in scene-->
-        <a-scene embedded arjs>
-
+        <!-- this is running on a-frame xr, so no need to initialize AR or camera
+        Demo component included here-->
+        <a-scene hit-test>
+            <!-- Load in OBJ assets -->
             <a-assets>
+                <!-- Sars -->
                 <a-asset-item id="sars-obj" src="models/sars_virus.obj"></a-asset-item>
                 <a-asset-item id="sars-mtl" src="models/sars_virus.mtl"></a-asset-item>
-
+                <!-- bacillus -->
                 <a-asset-item id="bacillus-obj" src="models/bacillus.obj"></a-asset-item>
-
+                <!-- erythrocyte -->
                 <a-asset-item id="erythrocyte-obj" src="models/erythrocyte.obj"></a-asset-item>
                 <a-asset-item id="erythrocyte-mtl" src="models/erythrocyte.mtl"></a-asset-item>
-
             </a-assets>
-
-            <!-- define camera that moves according to marker position -->
-            <a-marker-camera preset="hiro"></a-marker-camera>
+            <!-- everything else with js -->
         </a-scene>
 
         <script type="text/javascript">
@@ -41,26 +43,33 @@
             */
             let scene = document.querySelector('a-scene');
 
-            let reticle = createReticle();
+            // let reticle = createReticle();
+
+            /*
+            Ok demo of Hit test. Lets see if I can get this working first
+            */
+
 
             let sarsArray = [];
             let bacillusArray = [];
             let erythrocyteArray = [];
             let maxGerms = 10;
 
-            for (let i = 0; i < maxGerms; i++) {
-                sarsArray[i] = createSars(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0);
-                bacillusArray[i] = createBacillus(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0.5);
-                erythrocyteArray[i] = createErythrocyte(i * 0.2 - maxGerms/2 * 0.2, 0.5, -0.5);
+            function createGermsArray() {
+                for (let i = 0; i < maxGerms; i++) {
+                    sarsArray[i] = createSars(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0);
+                    bacillusArray[i] = createBacillus(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0.5);
+                    erythrocyteArray[i] = createErythrocyte(i * 0.2 - maxGerms/2 * 0.2, 0.5, -0.5);
 
-                // Just see if I can get everything random walking
-                sarsArray[i].setAttribute("random-movement", "");
-                bacillusArray[i].setAttribute("random-movement", "");
-                erythrocyteArray[i].setAttribute("random-movement", "");
-                // Random spinning?
-                sarsArray[i].setAttribute("random-rotation", "");
-                bacillusArray[i].setAttribute("random-rotation", "");
-                erythrocyteArray[i].setAttribute("random-rotation", "");
+                    // Just see if I can get everything random walking
+                    sarsArray[i].setAttribute("random-movement", "");
+                    bacillusArray[i].setAttribute("random-movement", "");
+                    erythrocyteArray[i].setAttribute("random-movement", "");
+                    // Random spinning?
+                    sarsArray[i].setAttribute("random-rotation", "");
+                    bacillusArray[i].setAttribute("random-rotation", "");
+                    erythrocyteArray[i].setAttribute("random-rotation", "");
+                }
             }
 
             function createSars(x, y, z, appendTo = scene) {
@@ -109,6 +118,32 @@
                 appendTo.appendChild(erythrocyte);
                 return erythrocyte;
             }
+
+            // I have something for this already
+            // var scene = AFRAME.scenes[0];
+
+            var newObject = function(data) {
+              var entity = data.detail;
+
+              entity.setAttribute('geometry', {
+                primitive: 'box',
+                width: 0.1,
+                height: 0.1,
+                depth: 0.1
+              });
+
+              entity.setAttribute('material', {
+                shader: 'standard',
+                transparent: true,
+                opacity: 0.45,
+                fog: false,
+                color: '#ffcc00'
+              });
+
+              scene.appendChild(entity);
+            }
+
+            scene.addEventListener('newAnchoredEntity', newObject);
 
         </script>
 
