@@ -41,6 +41,8 @@
             */
             let scene = document.querySelector('a-scene');
 
+            let reticle = createReticle();
+
             let sarsArray = [];
             let bacillusArray = [];
             let erythrocyteArray = [];
@@ -72,6 +74,16 @@
 
                 appendTo.appendChild(sars);
                 return sars;
+            }
+
+            function createReticle(appendTo = scene) {
+                let reticle = document.createElement('a-entity');
+                reticle.setAttribute("reticle", "");
+                reticle.setAttribute("geometry", "primitive", "ring", "radiusInner", "0.04", "radiusOuter", "0.05");
+                reticle.setAttribute("material", "color", "green");
+
+                appendTo.appendChild(reticle);
+                return reticle;
             }
 
             function createBacillus(x, y, z, appendTo = scene) {
