@@ -142,7 +142,21 @@
 
               scene.appendChild(entity);
             }
-            scene.addEventListener('newAnchoredEntity', newObject);
+
+            var newBacteria = function(data) {
+                let entity = data.detail;
+
+                entity.setAttribute("obj-model", "obj", "#bacillus-obj");
+                entity.setAttribute("random-color", '');
+                entity.setAttribute("class", "bacillus bacteria");
+                // entity.setAttribute("position", `${x} ${y} ${z}`);
+                entity.setAttribute("scale", ".0002 .0002 .0002");
+
+                scene.appendChild(entity);
+            }
+
+            // scene.addEventListener('newAnchoredEntity', newObject);
+            scene.addEventListener('newAnchoredEntity', newBacteria);
         </script>
 
     </body>
