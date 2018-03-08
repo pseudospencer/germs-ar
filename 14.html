@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Germs AR</title>
+        <!-- Integrate A-frame XR -->
+        <script src="vendor/aframe-master.js"></script>
+        <script src='vendor/three.xr.js'></script>
+        <script src='dist/aframe-xr.js'></script>
+        <!-- Custom Components -->
+        <script src="components/random-color.js"></script>
+        <script src="components/random-movement.js"></script>
+        <script src="components/random-rotation.js"></script>
+        <script src="components/hit-test.js"></script>
+        <script src="components/reticle.js"></script>
+    </head>
+
+    <body style="margin: 0px; overflow: hidden;">
+        <!-- this is running on a-frame xr, so no need to initialize AR or camera
+        Demo component included here-->
+        <a-scene hit-test>
+            <!-- Load in OBJ assets -->
+            <a-assets>
+                <!-- bacillus -->
+                <a-asset-item id="bacillus-obj" src="models/bacillus.obj"></a-asset-item>
+            </a-assets>
+            <!-- everything else with js -->
+        </a-scene>
+
+        <script type="text/javascript">
+            /*
+            Reticle + hit test. goal: spawn item inside reticle.
+            */
+            let scene = document.querySelector('a-scene');
+
+            let reticle = createReticle();
+
+            function createReticle(appendTo = scene) {
+                // This wasn't woking before because I didn't include the reticle component in the head!
+                let reticle = document.createElement('a-entity');
+                reticle.setAttribute("reticle", "");
+                reticle.setAttribute("geometry", {
+                    primitive: "ring",
+                    radiusInner: 0.04,
+                    radiusOuter: 0.05,
+                });
+                reticle.setAttribute("material", "color", "green");
+
+                appendTo.appendChild(reticle);
+                return reticle;
+            }
+
+            function createBacillus(x, y, z, appendTo = scene) {
+                let bacillus = document.createElement("a-entity");
+                bacillus.setAttribute("obj-model", "obj", "#bacillus-obj");
+                bacillus.setAttribute("random-color", '');
+                bacillus.setAttribute("class", "bacillus bacteria");
+                bacillus.setAttribute("position", `${x} ${y} ${z}`);
+                bacillus.setAttribute("scale", ".0002 .0002 .0002");
+
+                appendTo.appendChild(bacillus);
+                return bacillus;
+            }
+
+            var newBacteria = function(data) {
+                let entity = data.detail;
+
+                entity.setAttribute("obj-model", "obj", "#bacillus-obj");
+                entity.setAttribute("class", "bacillus bacteria");
+                // entity.setAttribute("position", `${x} ${y} ${z}`);
+                entity.setAttribute("scale", ".0002 .0002 .0002");
+                entity.setAttribute("random-color", '');
+                entity.setAttribute("random-rotation", "");
+                entity.setAttribute("random-movement", "");
+
+                scene.appendChild(entity);
+            }
+
+            scene.addEventListener('newAnchoredEntity', newBacteria);
+        </script>
+
+    </body>
+</html>
