@@ -11,9 +11,8 @@
         <script src="components/random-color.js"></script>
         <script src="components/random-movement.js"></script>
         <script src="components/random-rotation.js"></script>
-        <script src="components/hit-test.js">
-
-        </script>
+        <script src="components/hit-test.js"></script>
+        <script src="components/reticle.js"></script>
     </head>
 
     <body style="margin: 0px; overflow: hidden;">
@@ -43,33 +42,43 @@
             */
             let scene = document.querySelector('a-scene');
 
-            // let reticle = createReticle();
-
             /*
-            Ok demo of Hit test. Lets see if I can get this working first
+            Hit test + reticle.
+            Goal = Create an object inside the reticle.
             */
 
+            let reticle = createReticle();
 
-            let sarsArray = [];
-            let bacillusArray = [];
-            let erythrocyteArray = [];
-            let maxGerms = 10;
+            // let sarsArray = [];
+            // let bacillusArray = [];
+            // let erythrocyteArray = [];
+            // let maxGerms = 10;
+            // function createGermsArray() {
+            //     for (let i = 0; i < maxGerms; i++) {
+            //         sarsArray[i] = createSars(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0);
+            //         bacillusArray[i] = createBacillus(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0.5);
+            //         erythrocyteArray[i] = createErythrocyte(i * 0.2 - maxGerms/2 * 0.2, 0.5, -0.5);
+            //
+            //         // Just see if I can get everything random walking
+            //         sarsArray[i].setAttribute("random-movement", "");
+            //         bacillusArray[i].setAttribute("random-movement", "");
+            //         erythrocyteArray[i].setAttribute("random-movement", "");
+            //         // Random spinning?
+            //         sarsArray[i].setAttribute("random-rotation", "");
+            //         bacillusArray[i].setAttribute("random-rotation", "");
+            //         erythrocyteArray[i].setAttribute("random-rotation", "");
+            //     }
+            // }
 
-            function createGermsArray() {
-                for (let i = 0; i < maxGerms; i++) {
-                    sarsArray[i] = createSars(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0);
-                    bacillusArray[i] = createBacillus(i * 0.2 - maxGerms/2 * 0.2, 0.5, 0.5);
-                    erythrocyteArray[i] = createErythrocyte(i * 0.2 - maxGerms/2 * 0.2, 0.5, -0.5);
+            function createReticle(appendTo = scene) {
+                // This wasn't woking before because I didn't include the reticle component in the head!
+                let reticle = document.createElement('a-entity');
+                reticle.setAttribute("reticle", "");
+                reticle.setAttribute("geometry", "primitive", "ring", "radiusInner", "0.04", "radiusOuter", "0.05");
+                reticle.setAttribute("material", "color", "green");
 
-                    // Just see if I can get everything random walking
-                    sarsArray[i].setAttribute("random-movement", "");
-                    bacillusArray[i].setAttribute("random-movement", "");
-                    erythrocyteArray[i].setAttribute("random-movement", "");
-                    // Random spinning?
-                    sarsArray[i].setAttribute("random-rotation", "");
-                    bacillusArray[i].setAttribute("random-rotation", "");
-                    erythrocyteArray[i].setAttribute("random-rotation", "");
-                }
+                appendTo.appendChild(reticle);
+                return reticle;
             }
 
             function createSars(x, y, z, appendTo = scene) {
@@ -83,16 +92,6 @@
 
                 appendTo.appendChild(sars);
                 return sars;
-            }
-
-            function createReticle(appendTo = scene) {
-                let reticle = document.createElement('a-entity');
-                reticle.setAttribute("reticle", ""); 
-                reticle.setAttribute("geometry", "primitive", "ring", "radiusInner", "0.04", "radiusOuter", "0.05");
-                reticle.setAttribute("material", "color", "green");
-
-                appendTo.appendChild(reticle);
-                return reticle;
             }
 
             function createBacillus(x, y, z, appendTo = scene) {
@@ -119,30 +118,21 @@
                 return erythrocyte;
             }
 
-            // I have something for this already
-            // var scene = AFRAME.scenes[0];
+            var newBacteria = function(data) {
+                let entity = data.detail;
 
-            var newObject = function(data) {
-              var entity = data.detail;
+                entity.setAttribute("obj-model", "obj", "#bacillus-obj");
+                entity.setAttribute("class", "bacillus bacteria");
+                // entity.setAttribute("position", `${x} ${y} ${z}`);
+                entity.setAttribute("scale", ".0002 .0002 .0002");
+                entity.setAttribute("random-color", '');
+                entity.setAttribute("random-rotation", "");
+                entity.setAttribute("random-movement", "");
 
-              entity.setAttribute('geometry', {
-                primitive: 'box',
-                width: 0.1,
-                height: 0.1,
-                depth: 0.1
-              });
-
-              entity.setAttribute('material', {
-                shader: 'standard',
-                transparent: true,
-                opacity: 0.45,
-                fog: false,
-                color: '#ffcc00'
-              });
-
-              scene.appendChild(entity);
+                scene.appendChild(entity);
             }
-            scene.addEventListener('newAnchoredEntity', newObject);
+
+            scene.addEventListener('newAnchoredEntity', newBacteria);
         </script>
 
     </body>
