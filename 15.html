@@ -9,8 +9,8 @@
         <script src='dist/aframe-xr.js'></script>
         <!-- Custom Components -->
         <script src="components/random-color.js"></script>
-        <!-- <script src="components/random-movement.js"></script> -->
-        <script src="components/random-movement-xr.js"></script>
+        <script src="components/random-movement.js"></script>
+        <!-- <script src="components/random-movement-xr.js"></script> -->
         <script src="components/random-rotation.js"></script>
         <script src="components/hit-test.js"></script>
         <script src="components/reticle.js"></script>
@@ -75,9 +75,11 @@
                 entity.setAttribute("random-color", '');
                 // These two aren't working, presumably becayse of how ARkit stores the object poses.
                 entity.setAttribute("random-rotation", "");
-                entity.setAttribute("random-movement-xr", {
-                    scalar: 30 // Play with this value to adjust movement speed
-                });
+                // entity.setAttribute("random-movement-xr", {
+                //     scalar: 30 // Play with this value to adjust movement speed
+                // });
+                entity.setAttribute("random-movement", "");
+
 
                 scene.appendChild(entity);
             }
