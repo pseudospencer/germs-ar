@@ -43,8 +43,7 @@ AFRAME.registerComponent('random-movement-xr', {
         // console.log(d1, d2, d3, this.el.object3D.position);
 
         // XR version
-        // let currentPosition = this.el.object3D.position; // if this doesn't work may have to edit attributes of this.xranchor
-        let currentPosition = this.el.xranchor.positionVec3; // if this doesn't work may have to edit attributes of this.xranchor
+        let currentPosition = this.el.object3D.position; // if this doesn't work may have to edit attributes of this.xranchor
         let newPosition = currentPosition.add(this.directionVec3);
 
         this.el.setAttribute('position', {
